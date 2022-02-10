@@ -1,9 +1,9 @@
 package com.davidev.chronos.ui
 
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.davidev.chronos.databinding.ActivityMainBinding
 import com.davidev.chronos.datasource.TaskDataSource
 
@@ -32,19 +32,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         adapter.listenerEdit = {
-
-            Log.e("TAG", "listenerEdit: $it")
+            //Log.e("TAG", "listenerEdit: $it")
         }
 
         adapter.listenerDelete = {
-            Log.e("TAG", "listenerDelete: $it")
+            //Log.e("TAG", "listenerDelete: $it")
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CREATE_NEW_TASK){
-            binding.rvTasks.adapter = adapter
+        if (requestCode == CREATE_NEW_TASK && resultCode == Activity.RESULT_OK) {
+            //binding.rvTasks.adapter = adapter
             adapter.submitList(TaskDataSource.getList())
 
         }
