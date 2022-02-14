@@ -10,46 +10,49 @@ import com.davidev.chronos.datasource.TaskDataSource
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val adapter by lazy {TaskListAdapter()}
+    private val adapter by lazy { TaskListAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.rvTasks.adapter = adapter
+        updateList()
 
-        insertlisteners()
+        insertListeners()
     }
 
 
-
-
-    private fun insertlisteners() {
+    private fun insertListeners() {
         binding.fab.setOnClickListener {
             startActivityForResult(Intent(this, AddTaskActivity::class.java), CREATE_NEW_TASK)
         }
 
         adapter.listenerEdit = {
-            //Log.e("TAG", "listenerEdit: $it")
+            val intent = Intent(this, AddTaskActivity::class.java)
+            intent.putExtra(AddTaskActivity.TASK_ID, it.id)
+            startActivityForResult(intent, CREATE_NEW_TASK)
         }
 
         adapter.listenerDelete = {
-            //Log.e("TAG", "listenerDelete: $it")
+            TaskDataSource.deleteTask(it)
+            updateList()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CREATE_NEW_TASK && resultCode == Activity.RESULT_OK) {
-            //binding.rvTasks.adapter = adapter
-            adapter.submitList(TaskDataSource.getList())
+        if (requestCode == CREATE_NEW_TASK && resultCode == Activity.RESULT_OK) updateList()
+    }
 
-        }
+    private fun updateList() {
+        val list = TaskDataSource.getList()
+        adapter.submitList(list)
     }
 
     companion object {
         private const val CREATE_NEW_TASK = 1000
     }
+
 }

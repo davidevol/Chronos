@@ -12,7 +12,6 @@ fun Date.format(): String {
     return SimpleDateFormat("dd/MM/yy").format(this)
 }
 
-// TODO
 var TextInputLayout.text: String
     get() = editText?.text?.toString() ?: ""
     set(value) {
